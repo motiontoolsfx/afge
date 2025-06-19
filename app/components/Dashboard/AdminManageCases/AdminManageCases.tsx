@@ -225,7 +225,7 @@ export default function AdminManageCases({ bcases, token }: Props) {
         });
 
         if (!res.ok) {
-            console.error("Failed to save:", await res.text());
+            console.error("Failed to save: ", await res.text());
             return;
         }
 
