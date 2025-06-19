@@ -1,0 +1,71 @@
+/* .container {
+    height: 100%;
+}
+
+.table {
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+    background-color: lightgray;
+    gap: 1px;
+    padding: 1px;
+    height: 100%;
+}
+
+.row {
+    display: flex;
+    gap: 1px;
+    background-color: lightgray;
+}
+
+.rowHeader {
+    display: flex;
+    gap: 1px;
+    background-color: lightgray;
+}
+
+.row input,
+.row textarea,
+.row select {
+    all: unset;
+    padding: 1rem;
+    background-color: var(--foreground);
+    width: 100px;
+}
+
+.row select {
+    cursor: pointer;
+}
+
+.row input[type="checkbox"] {
+    border: 2px solid black;
+    width: 4px;
+    height: 4px;
+    border-radius: var(--corner-radius);
+    cursor: pointer;
+}
+
+.row input:checked {
+    background-color: red !important;
+}
+
+.filterButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+    width: 200px;
+
+}
+
+.icon {
+    width: 16px;
+    height: 16px;
+}
+
+.changed {
+    background-color: lightgreen !important;
+} */

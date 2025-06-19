@@ -1,0 +1,266 @@
+{
+    "title": "AFGE Local 507 Request for Assistance",
+    "subtitle": "This form is used to request union support or report a workplace concern. Please provide basic details so we can follow up and assist you promptly.",
+    "sections": [
+        {
+            "id": "section1",
+            "title": "Info",
+            "questions": [
+                {
+                    "id": "fname",
+                    "title": "First Name",
+                    "type": "short_answer",
+                    "required": true
+                },
+                {
+                    "id": "lname",
+                    "title": "Last Name",
+                    "type": "short_answer",
+                    "required": true
+                },
+                {
+                    "id": "phoneNumber",
+                    "title": "Phone Number",
+                    "type": "short_answer",
+                    "required": true
+                },
+                {
+                    "id": "personalEmail",
+                    "title": "Personal Email",
+                    "type": "short_answer",
+                    "required": true
+                },
+                {
+                    "id": "date",
+                    "title": "Date",
+                    "type": "short_answer",
+                    "required": true
+                },
+                {
+                    "id": "position",
+                    "title": "Position",
+                    "type": "dropdown",
+                    "required": true,
+                    "options": [
+                        {
+                            "id": "Nurse",
+                            "option": "Nurse"
+                        },
+                        {
+                            "id": "MAS",
+                            "option": "MAS"
+                        },
+                        {
+                            "id": "FMS",
+                            "option": "FMS"
+                        },
+                        {
+                            "id": "EMS",
+                            "option": "EMS"
+                        },
+                        {
+                            "id": "HIMS",
+                            "option": "HIMS"
+                        },
+                        {
+                            "id": "Doctor",
+                            "option": "Doctor"
+                        },
+                        {
+                            "id": "Tech",
+                            "option": "Tech"
+                        },
+                        {
+                            "id": "LPN",
+                            "option": "LPN"
+                        },
+                        {
+                            "id": "Social_Work",
+                            "option": "Social Work"
+                        },
+                        {
+                            "id": "Dentist",
+                            "option": "Dentist"
+                        },
+                        {
+                            "id": "Dental_Assistant",
+                            "option": "Dental Assistant"
+                        },
+                        {
+                            "id": "Other",
+                            "option": "Other"
+                        }
+                    ]
+                },
+                {
+                    "id": "payScale",
+                    "title": "Pay Scale",
+                    "type": "dropdown",
+                    "required": true,
+                    "options": [
+                        {
+                            "id": "GS",
+                            "option": "GS"
+                        },
+                        {
+                            "id": "WG",
+                            "option": "WG"
+                        },
+                        {
+                            "id": "VN",
+                            "option": "VN"
+                        }
+                    ]
+                },
+                {
+                    "id": "entitlement",
+                    "title": "Entitlement",
+                    "type": "dropdown",
+                    "required": true,
+                    "options": [
+                        {
+                            "id": "Title_38",
+                            "option": "Title 38"
+                        },
+                        {
+                            "id": "Title_5",
+                            "option": "Title 5"
+                        },
+                        {
+                            "id": "Hybrid",
+                            "option": "Hybrid"
+                        },
+                        {
+                            "id": "Unknown",
+                            "option": "Unknown"
+                        }
+                    ]
+                },
+                {
+                    "id": "supervisor",
+                    "title": "Supervisor",
+                    "type": "short_answer",
+                    "required": true
+                },
+                {
+                    "id": "documents",
+                    "title": "Supporting Documents",
+                    "type": "file",
+                    "required": false
+                },
+                {
+                    "id": "reasonForRequest",
+                    "title": "Reason for Request",
+                    "type": "dropdown",
+                    "required": true,
+                    "options": [
+                        {
+                            "id": "Fact_Finding",
+                            "option": "Fact Finding"
+                        },
+                        {
+                            "id": "Pay_Issues",
+                            "option": "Pay Issues"
+                        },
+                        {
+                            "id": "Performance_Appraisal",
+                            "option": "Performance Appraisal"
+                        },
+                        {
+                            "id": "EEO",
+                            "option": "EEO"
+                        },
+                        {
+                            "id": "Grievance",
+                            "option": "Grievance"
+                        },
+                        {
+                            "id": "Change_in_Working_Condition",
+                            "option": "Change in Working Condition"
+                        },
+                        {
+                            "id": "Reasonable_Accommodation_RA",
+                            "option": "Reasonable Accommodation (RA)"
+                        },
+                        {
+                            "id": "Workers_Compensation",
+                            "option": "Workers Compensation"
+                        },
+                        {
+                            "id": "Disciplinary_Action",
+                            "option": "Disciplinary Action"
+                        },
+                        {
+                            "id": "Other",
+                            "option": "Other"
+                        }
+                    ],
+                    "branching": {
+                        "Pay_Issues": "section2",
+                        "Disciplinary_Action": "section3"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "section2",
+            "title": "Pay Issues",
+            "questions": [
+                {
+                    "id": "typesOfPayIssue",
+                    "title": "Types of Pay Issue",
+                    "type": "dropdown",
+                    "required": false,
+                    "options": [
+                        {
+                            "id": "Indebtedness",
+                            "option": "Indebtedness"
+                        },
+                        {
+                            "id": "Pay_Check",
+                            "option": "Pay check"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "section3",
+            "title": "Disciplinary Action",
+            "questions": [
+                {
+                    "id": "typesOfDisciplinaryAction",
+                    "title": "Types of Disciplinary Action",
+                    "type": "dropdown",
+                    "required": false,
+                    "options": [
+                        {
+                            "id": "Verbal_Counseling",
+                            "option": "Verbal Counseling"
+                        },
+                        {
+                            "id": "Written_Counseling",
+                            "option": "Written Counseling"
+                        },
+                        {
+                            "id": "Admonishment",
+                            "option": "Admonishment"
+                        },
+                        {
+                            "id": "Reprimand",
+                            "option": "Reprimand"
+                        },
+                        {
+                            "id": "Proposed_Suspension",
+                            "option": "Proposed Suspension"
+                        },
+                        {
+                            "id": "Proposed_Removal",
+                            "option": "Proposed Removal"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,119 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  fname     String
+  lname     String
+  username  String   @unique
+  password  String
+  role      Role
+  createdAt DateTime @default(now())
+
+  cases Case[]
+}
+
+enum Role {
+  owner
+  admin
+  steward
+}
+
+model Case {
+  id                        Int                     @id @default(autoincrement())
+  userId                    String?
+  user                      User?                   @relation(fields: [userId], references: [id])
+  fname                     String
+  lname                     String
+  phoneNumber               String
+  personalEmail             String
+  date                      String
+  position                  Position
+  payScale                  PayScale
+  entitlement               Entitlement
+  supervisor                String
+  reasonForRequest          ReasonForRequest
+  typesOfPayIssue           PayIssueType?
+  typesOfDisciplinaryAction DisciplinaryActionType?
+  notes                     String?
+  progress                  Progress?               @default(Not_Started)
+  createdAt                 DateTime                @default(now())
+  updatedAt                 DateTime                @updatedAt
+}
+
+enum Position {
+  Nurse
+  MAS
+  FMS
+  EMS
+  HIMS
+  Doctor
+  Tech
+  LPN
+  Social_Work
+  Dentist
+  Dental_Assistant
+  Other
+}
+
+enum PayScale {
+  GS
+  WG
+  VN
+}
+
+enum Entitlement {
+  Title_38
+  Title_5
+  Hybrid
+  Unknown
+}
+
+enum ReasonForRequest {
+  Fact_Finding
+  Pay_Issues
+  Performance_Appraisal
+  EEO
+  Grievance
+  Change_in_Working_Condition
+  Reasonable_Accommodation_RA
+  Workers_Compensation
+  Disciplinary_Action
+  Other
+}
+
+enum PayIssueType {
+  Indebtedness
+  Pay_check
+}
+
+enum DisciplinaryActionType {
+  Verbal_Counseling
+  Written_Counseling
+  Admonishment
+  Reprimand
+  Proposed_Suspension
+  Proposed_Removal
+}
+
+enum Progress {
+  Not_Started
+  In_Progress
+  Meeting_Set
+  Awaiting_Response
+  Esculated
+  Complete
+}

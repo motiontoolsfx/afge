@@ -1,0 +1,50 @@
+.progressStats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* gap: 1rem; */
+    /* display: flex; */
+    background: var(--foreground);
+    /* border-radius: var(--corner-radius); */
+    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); */
+    /* border: 1px solid lightgray; */
+    gap: 1rem;
+}
+
+.progressStats li {
+    all: unset;
+    padding: 2rem 1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    border-radius: var(--corner-radius);
+    transition: var(--transition-short) box-shadow;
+    border: 1px solid lightgray;
+}
+
+.progressStats li:hover {
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* .progressStats li:not(:first-child) {
+    border-left: 1px solid lightgray;
+} */
+
+.progressStats li p {
+    opacity: 0.6;
+}
+
+.progressStats li h3 {
+    font-size: 2rem;
+}
+
+.icon {
+    background: var(--background-light);
+    padding: 0.5rem;
+    border-radius: var(--corner-radius);
+}
+
+.icon svg {
+    width: 2rem;
+    vertical-align: middle;
+}

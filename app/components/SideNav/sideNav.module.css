@@ -1,0 +1,73 @@
+.page {
+    margin: auto;
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    width: calc(100vw - 2rem);
+    height: 100vh;
+    background-color: var(--background-light);
+    gap: 1rem;
+}
+
+.navBar {
+    width: 100%;
+    margin: 1rem 0;
+    /* background-color: var(--background); */
+    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); */
+}
+
+.navBar img {
+    width: 100%;
+}
+
+.navBar ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: 100%;
+}
+
+.linkContent {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.tabIcon {
+    width: 1.5rem;
+}
+
+.link,
+.activeLink {
+    all: unset;
+    padding: 1rem;
+    border-radius: var(--corner-radius);
+    transition: var(--transition-short) background-color;
+    transition: var(--transition-short) box-shadow;
+    cursor: pointer;
+}
+
+.link:hover {
+    background-color: var(--foreground);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.activeLink {
+    background-color: var(--background);
+    color: var(--background-light);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.logoutBtn {
+    margin-top: auto;
+}
+
+.content {
+    width: 100%;
+    height: calc(100% - 2rem);
+    border-radius: var(--corner-radius);
+    padding: 2rem;
+    background-color: var(--foreground);
+    overflow: hidden;
+    align-self: center;
+    justify-self: center;
+}

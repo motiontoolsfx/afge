@@ -1,0 +1,166 @@
+:root {
+  --background: #002D74;
+  --background-light: hsl(240, 33%, 95%);
+  --foreground: white;
+
+  --accent: #f4ca20;
+
+  --text-color: hsl(240, 15%, 40%);
+
+  --color-error: #e63946;
+  --color-success: #2a9d8f;
+  --color-warning: #f4a261;
+
+  --corner-radius: 8px;
+
+  --transition-short: 100ms ease;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  color: var(--text-color);
+  background: var(--background-light);
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+input,
+select {
+  all: unset;
+  border: 1px solid lightgray;
+  /* background: var(--background-light); */
+  border-radius: var(--corner-radius);
+  padding: 8px;
+  transition: var(--transition-short) border-color;
+}
+
+input:hover,
+input:focus,
+select:hover,
+select:focus {
+  border-color: var(--accent);
+}
+
+select {}
+
+/* .select {
+  position: relative;
+}
+
+.select::before,
+.select::after {
+  --size: 0.3rem;
+  position: absolute;
+  content: "";
+  right: 1rem;
+  pointer-events: none;
+}
+
+.select::before {
+  border-left: var(--size) solid transparent;
+  border-right: var(--size) solid transparent;
+  border-bottom: var(--size) solid black;
+  top: 40%;
+}
+
+.select::after {
+  border-left: var(--size) solid transparent;
+  border-right: var(--size) solid transparent;
+  border-top: var(--size) solid black;
+  top: 55%;
+} */
+
+/* Base Styles */
+.button-solid,
+.button-outline {
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+/* Solid Button */
+.button-solid {
+  background-color: #3b82f6;
+  /* blue-500 */
+  color: white;
+  border: none;
+}
+
+.button-solid:hover {
+  background-color: #2563eb;
+  /* blue-600 */
+}
+
+.button-solid:disabled {
+  background-color: #93c5fd;
+  /* blue-300 */
+  cursor: not-allowed;
+}
+
+/* Outline Button */
+.button-outline {
+  background-color: transparent;
+  color: #3b82f6;
+  border: 2px solid #3b82f6;
+}
+
+.button-outline:hover {
+  background-color: #eff6ff;
+  /* light blue tint */
+}
+
+.button-outline:disabled {
+  color: #93c5fd;
+  border-color: #93c5fd;
+  cursor: not-allowed;
+}
+
+/* checkbox */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  background-color: #fff;
+}
+
+input[type="checkbox"]:hover {
+  border-color: #007bff;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 3px;
+  height: 6px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}

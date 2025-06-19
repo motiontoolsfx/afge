@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.container button {
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 8px;
+}
+
+.pageSelect {
+    width: 2rem;
+}
