@@ -230,7 +230,7 @@ export default function AdminManageCases({ bcases, token }: Props) {
         }
 
         // if successful, update local state so “Save” button goes back to disabled
-        setCases(updated);
+        // setCases(updated);
     }
 
     return (
