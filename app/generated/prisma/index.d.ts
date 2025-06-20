@@ -2252,6 +2252,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction: $Enums.DisciplinaryActionType | null
     notes: string | null
     progress: $Enums.Progress | null
+    documents: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2273,6 +2274,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction: $Enums.DisciplinaryActionType | null
     notes: string | null
     progress: $Enums.Progress | null
+    documents: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2294,6 +2296,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction: number
     notes: number
     progress: number
+    documents: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2325,6 +2328,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: true
     notes?: true
     progress?: true
+    documents?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2346,6 +2350,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: true
     notes?: true
     progress?: true
+    documents?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2367,6 +2372,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: true
     notes?: true
     progress?: true
+    documents?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2475,6 +2481,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction: $Enums.DisciplinaryActionType | null
     notes: string | null
     progress: $Enums.Progress | null
+    documents: string | null
     createdAt: Date
     updatedAt: Date
     _count: CaseCountAggregateOutputType | null
@@ -2515,6 +2522,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: boolean
     notes?: boolean
     progress?: boolean
+    documents?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | Case$userArgs<ExtArgs>
@@ -2537,6 +2545,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: boolean
     notes?: boolean
     progress?: boolean
+    documents?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | Case$userArgs<ExtArgs>
@@ -2559,6 +2568,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: boolean
     notes?: boolean
     progress?: boolean
+    documents?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | Case$userArgs<ExtArgs>
@@ -2581,11 +2591,12 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: boolean
     notes?: boolean
     progress?: boolean
+    documents?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "fname" | "lname" | "phoneNumber" | "personalEmail" | "date" | "position" | "payScale" | "entitlement" | "supervisor" | "reasonForRequest" | "typesOfPayIssue" | "typesOfDisciplinaryAction" | "notes" | "progress" | "createdAt" | "updatedAt", ExtArgs["result"]["case"]>
+  export type CaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "fname" | "lname" | "phoneNumber" | "personalEmail" | "date" | "position" | "payScale" | "entitlement" | "supervisor" | "reasonForRequest" | "typesOfPayIssue" | "typesOfDisciplinaryAction" | "notes" | "progress" | "documents" | "createdAt" | "updatedAt", ExtArgs["result"]["case"]>
   export type CaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | Case$userArgs<ExtArgs>
   }
@@ -2618,6 +2629,7 @@ export namespace Prisma {
       typesOfDisciplinaryAction: $Enums.DisciplinaryActionType | null
       notes: string | null
       progress: $Enums.Progress | null
+      documents: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["case"]>
@@ -3060,6 +3072,7 @@ export namespace Prisma {
     readonly typesOfDisciplinaryAction: FieldRef<"Case", 'DisciplinaryActionType'>
     readonly notes: FieldRef<"Case", 'String'>
     readonly progress: FieldRef<"Case", 'Progress'>
+    readonly documents: FieldRef<"Case", 'String'>
     readonly createdAt: FieldRef<"Case", 'DateTime'>
     readonly updatedAt: FieldRef<"Case", 'DateTime'>
   }
@@ -3534,6 +3547,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction: 'typesOfDisciplinaryAction',
     notes: 'notes',
     progress: 'progress',
+    documents: 'documents',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -3734,6 +3748,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: EnumDisciplinaryActionTypeNullableFilter<"Case"> | $Enums.DisciplinaryActionType | null
     notes?: StringNullableFilter<"Case"> | string | null
     progress?: EnumProgressNullableFilter<"Case"> | $Enums.Progress | null
+    documents?: StringNullableFilter<"Case"> | string | null
     createdAt?: DateTimeFilter<"Case"> | Date | string
     updatedAt?: DateTimeFilter<"Case"> | Date | string
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
@@ -3756,6 +3771,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     progress?: SortOrderInput | SortOrder
+    documents?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -3781,6 +3797,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: EnumDisciplinaryActionTypeNullableFilter<"Case"> | $Enums.DisciplinaryActionType | null
     notes?: StringNullableFilter<"Case"> | string | null
     progress?: EnumProgressNullableFilter<"Case"> | $Enums.Progress | null
+    documents?: StringNullableFilter<"Case"> | string | null
     createdAt?: DateTimeFilter<"Case"> | Date | string
     updatedAt?: DateTimeFilter<"Case"> | Date | string
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
@@ -3803,6 +3820,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     progress?: SortOrderInput | SortOrder
+    documents?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CaseCountOrderByAggregateInput
@@ -3832,6 +3850,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: EnumDisciplinaryActionTypeNullableWithAggregatesFilter<"Case"> | $Enums.DisciplinaryActionType | null
     notes?: StringNullableWithAggregatesFilter<"Case"> | string | null
     progress?: EnumProgressNullableWithAggregatesFilter<"Case"> | $Enums.Progress | null
+    documents?: StringNullableWithAggregatesFilter<"Case"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Case"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Case"> | Date | string
   }
@@ -3925,6 +3944,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: $Enums.DisciplinaryActionType | null
     notes?: string | null
     progress?: $Enums.Progress | null
+    documents?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     user?: UserCreateNestedOneWithoutCasesInput
@@ -3947,6 +3967,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: $Enums.DisciplinaryActionType | null
     notes?: string | null
     progress?: $Enums.Progress | null
+    documents?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -3966,6 +3987,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: NullableEnumDisciplinaryActionTypeFieldUpdateOperationsInput | $Enums.DisciplinaryActionType | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     progress?: NullableEnumProgressFieldUpdateOperationsInput | $Enums.Progress | null
+    documents?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutCasesNestedInput
@@ -3988,6 +4010,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: NullableEnumDisciplinaryActionTypeFieldUpdateOperationsInput | $Enums.DisciplinaryActionType | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     progress?: NullableEnumProgressFieldUpdateOperationsInput | $Enums.Progress | null
+    documents?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -4009,6 +4032,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: $Enums.DisciplinaryActionType | null
     notes?: string | null
     progress?: $Enums.Progress | null
+    documents?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -4028,6 +4052,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: NullableEnumDisciplinaryActionTypeFieldUpdateOperationsInput | $Enums.DisciplinaryActionType | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     progress?: NullableEnumProgressFieldUpdateOperationsInput | $Enums.Progress | null
+    documents?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -4049,6 +4074,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: NullableEnumDisciplinaryActionTypeFieldUpdateOperationsInput | $Enums.DisciplinaryActionType | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     progress?: NullableEnumProgressFieldUpdateOperationsInput | $Enums.Progress | null
+    documents?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -4267,6 +4293,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: SortOrder
     notes?: SortOrder
     progress?: SortOrder
+    documents?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -4292,6 +4319,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: SortOrder
     notes?: SortOrder
     progress?: SortOrder
+    documents?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -4313,6 +4341,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: SortOrder
     notes?: SortOrder
     progress?: SortOrder
+    documents?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -4821,6 +4850,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: $Enums.DisciplinaryActionType | null
     notes?: string | null
     progress?: $Enums.Progress | null
+    documents?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -4841,6 +4871,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: $Enums.DisciplinaryActionType | null
     notes?: string | null
     progress?: $Enums.Progress | null
+    documents?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -4890,6 +4921,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: EnumDisciplinaryActionTypeNullableFilter<"Case"> | $Enums.DisciplinaryActionType | null
     notes?: StringNullableFilter<"Case"> | string | null
     progress?: EnumProgressNullableFilter<"Case"> | $Enums.Progress | null
+    documents?: StringNullableFilter<"Case"> | string | null
     createdAt?: DateTimeFilter<"Case"> | Date | string
     updatedAt?: DateTimeFilter<"Case"> | Date | string
   }
@@ -4966,6 +4998,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: $Enums.DisciplinaryActionType | null
     notes?: string | null
     progress?: $Enums.Progress | null
+    documents?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -4985,6 +5018,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: NullableEnumDisciplinaryActionTypeFieldUpdateOperationsInput | $Enums.DisciplinaryActionType | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     progress?: NullableEnumProgressFieldUpdateOperationsInput | $Enums.Progress | null
+    documents?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -5005,6 +5039,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: NullableEnumDisciplinaryActionTypeFieldUpdateOperationsInput | $Enums.DisciplinaryActionType | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     progress?: NullableEnumProgressFieldUpdateOperationsInput | $Enums.Progress | null
+    documents?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -5025,6 +5060,7 @@ export namespace Prisma {
     typesOfDisciplinaryAction?: NullableEnumDisciplinaryActionTypeFieldUpdateOperationsInput | $Enums.DisciplinaryActionType | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     progress?: NullableEnumProgressFieldUpdateOperationsInput | $Enums.Progress | null
+    documents?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

@@ -1,8 +1,7 @@
 'use client';
 import { Role } from "@/app/generated/prisma";
 import React, { useState, useEffect } from "react";
-
-import styles from './manageUsers.module.css'
+import styles from './manageUsers.module.css';
 
 type User = {
     id: string;
@@ -20,16 +19,20 @@ function deepClone<T>(obj: T): T {
 }
 
 interface ManageUsersProps {
-    users: { users: User[] };
+    users?: { users: User[] };
     token: string;
 }
 
 export default function ManageUsers({ users, token }: ManageUsersProps) {
+    if (!users || !users.users) {
+        return <div>Error loading users</div>;
+    }
+
     const [rows, setRows] = useState<UserRow[]>(() =>
-        users.users.map((u) => ({ ...u, active: false }))
+        users?.users?.map((u) => ({ ...u, active: false })) ?? []
     );
     const [originalRows, setOriginalRows] = useState<UserRow[]>(() =>
-        users.users.map((u) => deepClone({ ...u, active: false }))
+        users?.users?.map((u) => deepClone({ ...u, active: false })) ?? []
     );
     const [hasChanges, setHasChanges] = useState(false);
 
@@ -103,7 +106,6 @@ export default function ManageUsers({ users, token }: ManageUsersProps) {
                 const updated = await res.json();
                 const updatedRows = rows.map((row) => {
                     if (!row.id) {
-                        // Assign new id from backend for created users
                         const updatedUser = updated.find(
                             (u: User) =>
                                 u.username === row.username &&
@@ -149,7 +151,7 @@ export default function ManageUsers({ users, token }: ManageUsersProps) {
     };
 
     return (
-        <div className={styles.container}>
+        <div className={'chart-container'}>
             <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
                 <button onClick={handleAddUser}>Add User</button>
                 <button disabled={!hasChanges} onClick={handleSaveChanges}>
@@ -160,7 +162,7 @@ export default function ManageUsers({ users, token }: ManageUsersProps) {
                 )}
             </div>
 
-            <table className={styles.table}>
+            <table className={'table'}>
                 <thead>
                     <tr>
                         <th>Active</th>
@@ -183,73 +185,48 @@ export default function ManageUsers({ users, token }: ManageUsersProps) {
                                     }
                                 />
                             </td>
-                            <td>
+                            <td className={isCellChanged(index, "fname") ? "chart-changed" : ''}>
                                 <input
                                     type="text"
                                     value={user.fname}
                                     onChange={(e) =>
                                         handleChange(index, "fname", e.target.value)
                                     }
-                                    style={{
-                                        backgroundColor: isCellChanged(index, "fname")
-                                            ? "#d4edda"
-                                            : undefined,
-                                    }}
                                 />
                             </td>
-                            <td>
+                            <td className={isCellChanged(index, "lname") ? "chart-changed" : ''}>
                                 <input
                                     type="text"
                                     value={user.lname}
                                     onChange={(e) =>
                                         handleChange(index, "lname", e.target.value)
                                     }
-                                    style={{
-                                        backgroundColor: isCellChanged(index, "lname")
-                                            ? "#d4edda"
-                                            : undefined,
-                                    }}
                                 />
                             </td>
-                            <td>
+                            <td className={isCellChanged(index, "username") ? "chart-changed" : ''}>
                                 <input
                                     type="text"
                                     value={user.username}
                                     onChange={(e) =>
                                         handleChange(index, "username", e.target.value)
                                     }
-                                    style={{
-                                        backgroundColor: isCellChanged(index, "username")
-                                            ? "#d4edda"
-                                            : undefined,
-                                    }}
                                 />
                             </td>
-                            <td>
+                            <td className={isCellChanged(index, "password") ? "chart-changed" : ''}>
                                 <input
                                     type="text"
                                     value={user.password}
                                     onChange={(e) =>
                                         handleChange(index, "password", e.target.value)
                                     }
-                                    style={{
-                                        backgroundColor: isCellChanged(index, "password")
-                                            ? "#d4edda"
-                                            : undefined,
-                                    }}
                                 />
                             </td>
-                            <td>
+                            <td className={isCellChanged(index, "role") ? "chart-changed" : ''}>
                                 <select
                                     value={user.role}
                                     onChange={(e) =>
                                         handleChange(index, "role", e.target.value as Role)
                                     }
-                                    style={{
-                                        backgroundColor: isCellChanged(index, "role")
-                                            ? "#d4edda"
-                                            : undefined,
-                                    }}
                                 >
                                     {Object.values(Role).map((r) => (
                                         <option key={r} value={r}>

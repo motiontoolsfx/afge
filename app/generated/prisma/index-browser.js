@@ -144,6 +144,7 @@ exports.Prisma.CaseScalarFieldEnum = {
   typesOfDisciplinaryAction: 'typesOfDisciplinaryAction',
   notes: 'notes',
   progress: 'progress',
+  documents: 'documents',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

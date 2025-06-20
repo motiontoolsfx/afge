@@ -69,3 +69,7 @@
 .changed {
     background-color: lightgreen !important;
 } */
+
+.chart {
+    overflow: scroll;
+}

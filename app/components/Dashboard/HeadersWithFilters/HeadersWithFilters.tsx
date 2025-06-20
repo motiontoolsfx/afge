@@ -6,7 +6,7 @@ import { Filters } from "@/types/dashboard";
 import styles from './HeadersWithFilters.module.css'
 import { FunnelIcon } from "@heroicons/react/24/solid";
 
-type CellType = "userDropdown" | "dropdown" | "text" | "date";
+type CellType = "userDropdown" | "dropdown" | "text" | "date" | "file";
 
 type CaseChartData = {
     [key: string]: {
@@ -152,86 +152,84 @@ export default function HeadersWithFilters({
     };
 
     return (
-        <thead>
-            <tr>
-                {Object.entries(chartData).map(([key, config]) => {
-                    const isSelectable =
-                        config.cellType === "userDropdown" ||
-                        (config.cellType === "dropdown" && config.options);
+        <tr>
+            {Object.entries(chartData).map(([key, config]) => {
+                const isSelectable =
+                    config.cellType === "userDropdown" ||
+                    (config.cellType === "dropdown" && config.options);
 
-                    const values = getValuesForKey(key);
+                const values = getValuesForKey(key);
 
-                    const notInValues: string[] =
-                        filters.where?.[key]?.notIn && Array.isArray(filters.where[key].notIn)
-                            ? filters.where[key].notIn
-                            : [];
-
-                    const selected = isSelectable
-                        ? values.filter((v) => !notInValues.includes(v))
+                const notInValues: string[] =
+                    filters.where?.[key]?.notIn && Array.isArray(filters.where[key].notIn)
+                        ? filters.where[key].notIn
                         : [];
 
-                    const isAllSelected = selected.length === values.length;
+                const selected = isSelectable
+                    ? values.filter((v) => !notInValues.includes(v))
+                    : [];
 
-                    return (
-                        <th key={key}>
-                            <div className={styles.header} onClick={() => toggleKey(key)}>{config.headerName}<FunnelIcon /></div>
-                            {openKey === key && (
-                                <div className={styles.popup}>
-                                    <button onClick={() => handleSort(key, "asc")}>Sort A-Z</button>
-                                    <button onClick={() => handleSort(key, "desc")}>Sort Z-A</button>
+                const isAllSelected = selected.length === values.length;
 
-                                    {isSelectable && (
-                                        <div>
-                                            <label>
+                return (
+                    <th key={key}>
+                        <div className={styles.header} onClick={() => toggleKey(key)}>{config.headerName}<FunnelIcon /></div>
+                        {openKey === key && (
+                            <div className={styles.popup}>
+                                <button onClick={() => handleSort(key, "asc")}>Sort A-Z</button>
+                                <button onClick={() => handleSort(key, "desc")}>Sort Z-A</button>
+
+                                {isSelectable && (
+                                    <div>
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                checked={isAllSelected}
+                                                onChange={() => handleSelectAll(key)}
+                                            />
+                                            Select All
+                                        </label>
+                                        {values.map((value) => (
+                                            <label key={value}>
                                                 <input
                                                     type="checkbox"
-                                                    checked={isAllSelected}
-                                                    onChange={() => handleSelectAll(key)}
+                                                    checked={selected.includes(value)}
+                                                    onChange={() => handleCheckboxChange(key, value)}
                                                 />
-                                                Select All
+                                                {config.cellType === "dropdown"
+                                                    ? config.options?.[value]
+                                                    : value}
                                             </label>
-                                            {values.map((value) => (
-                                                <label key={value}>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={selected.includes(value)}
-                                                        onChange={() => handleCheckboxChange(key, value)}
-                                                    />
-                                                    {config.cellType === "dropdown"
-                                                        ? config.options?.[value]
-                                                        : value}
-                                                </label>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {(config.cellType === "text" || config.cellType === "date") && (
+                                    <div>
+                                        <input
+                                            type="text"
+                                            value={inputValues[key] || ""}
+                                            onChange={(e) => handleInputChange(key, e.target.value)}
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter") handleTextEnter(key);
+                                            }}
+                                        />
+                                        <button onClick={() => handleTextEnter(key)}>Enter</button>
+                                        <div>
+                                            {(textSearches[key] || []).map((value) => (
+                                                <span key={value}>
+                                                    {value}{" "}
+                                                    <button onClick={() => removeSearch(key, value)}>x</button>
+                                                </span>
                                             ))}
                                         </div>
-                                    )}
-
-                                    {(config.cellType === "text" || config.cellType === "date") && (
-                                        <div>
-                                            <input
-                                                type="text"
-                                                value={inputValues[key] || ""}
-                                                onChange={(e) => handleInputChange(key, e.target.value)}
-                                                onKeyDown={(e) => {
-                                                    if (e.key === "Enter") handleTextEnter(key);
-                                                }}
-                                            />
-                                            <button onClick={() => handleTextEnter(key)}>Enter</button>
-                                            <div>
-                                                {(textSearches[key] || []).map((value) => (
-                                                    <span key={value}>
-                                                        {value}{" "}
-                                                        <button onClick={() => removeSearch(key, value)}>x</button>
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                        </th>
-                    );
-                })}
-            </tr>
-        </thead>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </th>
+                );
+            })}
+        </tr>
     );
 }

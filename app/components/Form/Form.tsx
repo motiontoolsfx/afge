@@ -1,17 +1,15 @@
 "use client";
 
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { useState } from "react";
 import { FormJson, Question } from "@/types/form";
-
-import styles from './form.module.css';
+import styles from "./form.module.css";
 
 interface Props {
   formJson: FormJson;
 }
 
 export default function Form({ formJson }: Props) {
-  // initialize defaultValues, including files as null
   const defaultValues = formJson.sections.reduce((acc, section) => {
     section.questions.forEach((q) => {
       acc[q.id] = q.type === "file" ? null : "";
@@ -22,29 +20,51 @@ export default function Form({ formJson }: Props) {
   const {
     control,
     handleSubmit,
-    watch,
-    formState: { errors }
-  } = useForm({ defaultValues });
+    setError,
+    clearErrors,
+    formState: { errors, isValid },
+  } = useForm({
+    defaultValues,
+    mode: "onChange",
+  });
 
-  const [sectionIndex, setSectionIndex] = useState(0);
-  const [history, setHistory] = useState<number[]>([]);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [sectionIndex] = useState(0);
   const currentSection = formJson.sections[sectionIndex];
 
-  // map dropdown label back to option id
+  const getOptionIdSafe = (q: Question, label: string) => {
+    if (!q.options) return undefined;
+    const found = q.options.find(
+      (opt) => (typeof opt === "string" ? opt === label : opt.option === label)
+    );
+    return typeof found === "string" ? found : found?.id;
+  };
+
   const getOptionId = (q: Question, label: string) => {
     if (!q.options) return label;
     const found = q.options.find(
       (opt) => (typeof opt === "string" ? opt === label : opt.option === label)
     );
-    if (!found) return label;
-    return typeof found === "string" ? found : found.id;
+    return typeof found === "string" ? found : found?.id ?? label;
   };
 
   const onSubmit = async (data: Record<string, any>) => {
     const formData = new FormData();
 
+    // compute visible questions including branching
+    const visibleQuestions: Question[] = [];
     currentSection.questions.forEach((q) => {
+      visibleQuestions.push(q);
+
+      if (q.branching) {
+        const selectedId = getOptionIdSafe(q, data[q.id] || "");
+        const branchSectionId = q.branching[selectedId as string];
+        const branchSection = formJson.sections.find(s => s.id === branchSectionId);
+        branchSection?.questions.forEach(subQ => visibleQuestions.push(subQ));
+      }
+    });
+
+    visibleQuestions.forEach((q) => {
       const value = data[q.id];
       if (q.type === "dropdown" && q.options) {
         formData.append(q.id, getOptionId(q, value));
@@ -55,23 +75,10 @@ export default function Form({ formJson }: Props) {
       }
     });
 
-    // handle branching
-    const branchingQ = currentSection.questions.find((q) => q.branching);
-    const nextSectionId = branchingQ?.branching?.[data[branchingQ.id]];
-    if (nextSectionId) {
-      const nextIndex = formJson.sections.findIndex((s) => s.id === nextSectionId);
-      if (nextIndex !== -1) {
-        setHistory((h) => [...h, sectionIndex]);
-        setSectionIndex(nextIndex);
-        return;
-      }
-    }
-
-    // final submit
     try {
       const resp = await fetch("/api/form/submit", {
         method: "POST",
-        body: formData, // multipart/form-data
+        body: formData,
       });
 
       if (!resp.ok) {
@@ -85,32 +92,48 @@ export default function Form({ formJson }: Props) {
     }
   };
 
-  const goBack = () => {
-    if (!history.length) return;
-    const prev = [...history];
-    const last = prev.pop()!;
-    setHistory(prev);
-    setSectionIndex(last);
-  };
-
   const renderQuestion = (q: Question) => (
     <div key={q.id} className={styles.question}>
       <label>{q.title}</label>
       <Controller
         name={q.id}
         control={control}
-        rules={{ required: q.required }}
+        rules={{
+          required: q.required,
+          validate: (file: File | null) =>
+            q.type === "file" && file && q.maxFileSize
+              ? file.size <= q.maxFileSize * 1024 * 1024 || `File must be ≤ ${q.maxFileSize}MB`
+              : true,
+        }}
         render={({ field }) => {
           if (q.type === "file") {
             return (
               <>
                 <input
                   type="file"
-                  onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] || null;
+                    if (file && q.maxFileSize && file.size > q.maxFileSize * 1024 * 1024) {
+                      setError(q.id, {
+                        type: "manual",
+                        message: `File must be ≤ ${q.maxFileSize}MB`,
+                      });
+                      e.target.value = "";
+                      field.onChange(null);
+                      return;
+                    }
+                    clearErrors(q.id);
+                    field.onChange(file);
+                  }}
                 />
+                {q.maxFileSize && (
+                  <small className={styles.helperText}>
+                    Max file size: {q.maxFileSize}MB
+                  </small>
+                )}
                 {errors[q.id] && (
                   <p className={styles.requiredText}>
-                    {q.title} is required.
+                    {(errors[q.id] as any)?.message ?? `${q.title} is required.`}
                   </p>
                 )}
               </>
@@ -120,39 +143,32 @@ export default function Form({ formJson }: Props) {
           if (q.type === "dropdown") {
             return (
               <>
-                <div className="select">
-                  <select {...field} value={field.value ?? ""}>
-                    <option value="">Select...</option>
-                    {q.options?.map((opt) =>
-                      typeof opt === "string" ? (
-                        <option key={opt} value={opt}>
-                          {opt}
-                        </option>
-                      ) : (
-                        <option key={opt.id} value={opt.option}>
-                          {opt.option}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
+                <select {...field} value={field.value ?? ""}>
+                  <option value="">Select...</option>
+                  {q.options?.map((opt) =>
+                    typeof opt === "string" ? (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ) : (
+                      <option key={opt.id} value={opt.option}>
+                        {opt.option}
+                      </option>
+                    )
+                  )}
+                </select>
                 {errors[q.id] && (
-                  <p className={styles.requiredText}>
-                    {q.title} is required.
-                  </p>
+                  <p className={styles.requiredText}>{q.title} is required.</p>
                 )}
               </>
             );
           }
 
-          // default to text input
           return (
             <>
               <input type="text" {...field} value={field.value ?? ""} />
               {errors[q.id] && (
-                <p className={styles.requiredText}>
-                  {q.title} is required.
-                </p>
+                <p className={styles.requiredText}>{q.title} is required.</p>
               )}
             </>
           );
@@ -160,6 +176,23 @@ export default function Form({ formJson }: Props) {
       />
     </div>
   );
+
+  const renderQuestionWithBranching = (q: Question) => {
+    const value = useWatch({ control, name: q.id });
+    const branchSectionId = q.branching?.[getOptionIdSafe(q, value) as string];
+    const branchSection = formJson.sections.find(s => s.id === branchSectionId);
+
+    return (
+      <div key={q.id}>
+        {renderQuestion(q)}
+        {branchSection?.questions.map(subQ => (
+          <div key={subQ.id} style={{ marginLeft: 20 }}>
+            {renderQuestion(subQ)}
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
@@ -170,7 +203,15 @@ export default function Form({ formJson }: Props) {
 
       <div className={styles.formContent}>
         <h2 className={styles.sectionHeading}>{currentSection.title}</h2>
-        {currentSection.questions.map(renderQuestion)}
+
+        {currentSection.questions
+          .filter(
+            (q) =>
+              !currentSection.questions.some(parentQ =>
+                parentQ.branching && Object.values(parentQ.branching).includes(q.id)
+              ) || q.branching !== undefined
+          )
+          .map(renderQuestionWithBranching)}
 
         {submitError && (
           <div className={styles.requiredText}>
@@ -178,26 +219,10 @@ export default function Form({ formJson }: Props) {
           </div>
         )}
 
-        <div style={{ display: "flex", gap: "1rem" }}>
-          {history.length > 0 && (
-            <button type="button" onClick={goBack}>
-              Back
-            </button>
-          )}
-          {(() => {
-            const branchingQ = currentSection.questions.find((q) => q.branching);
-            const nextSectionId = branchingQ?.branching?.[watch(branchingQ?.id)];
-            const isLast = !nextSectionId;
-            return (
-              <button
-                className="button-outline"
-                type="submit"
-                disabled={Object.keys(errors).length > 0}
-              >
-                {isLast ? "Submit" : "Next"}
-              </button>
-            );
-          })()}
+        <div style={{ marginTop: "1rem" }}>
+          <button className="button-solid" type="submit" disabled={!isValid}>
+            Submit
+          </button>
         </div>
       </div>
     </form>

@@ -13,5 +13,6 @@ export async function POST(req: Request) {
     const token = signToken({ id: user.id, role: user.role })
     const res = NextResponse.json({ success: true })
     res.cookies.set('token', token, { httpOnly: true, path: '/' })
+
     return res
 }

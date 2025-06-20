@@ -12,6 +12,7 @@ export interface Question {
     required: boolean;
     options?: Array<string | { id: string; option: string }>;
     branching?: Record<string, string>;
+    maxFileSize?: number;
 }
 
 export type Section = {

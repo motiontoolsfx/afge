@@ -1,4 +1,4 @@
-.table {
+/* .table {
     width: 100%;
     border-collapse: collapse;
 }
@@ -25,3 +25,7 @@
     height: 100%;
     overflow: auto;
 }
+
+.changed {
+    background: var(--accent);
+} */

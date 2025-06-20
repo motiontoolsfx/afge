@@ -50,6 +50,7 @@ model Case {
   typesOfDisciplinaryAction DisciplinaryActionType?
   notes                     String?
   progress                  Progress?               @default(Not_Started)
+  documents                      String?
   createdAt                 DateTime                @default(now())
   updatedAt                 DateTime                @updatedAt
 }

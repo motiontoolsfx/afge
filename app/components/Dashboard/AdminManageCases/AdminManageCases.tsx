@@ -5,6 +5,8 @@ import HeadersWithFilters from "../HeadersWithFilters/HeadersWithFilters";
 import { Filters } from "@/types/dashboard";
 import EditableChart from "../EditableChart/EditableChart";
 
+import styles from './adminManageCase.module.css'
+
 type Props = {
     bcases: any; // you can keep AdminCases | undefined if you want
     token: string;
@@ -112,6 +114,11 @@ const caseChartData = {
     supervisor: {
         headerName: "Supervisor",
         cellType: "text" as const,
+        editable: true
+    },
+    documents: {
+        headerName: "Supporting Documents",
+        cellType: "file" as const,
         editable: true
     },
     reasonForRequest: {
@@ -237,7 +244,7 @@ export default function AdminManageCases({ bcases, token }: Props) {
         <div>
             <div>Save Delete Print</div>
             {cases && (
-                <div key={JSON.stringify(cases.chartData)}>
+                <div key={JSON.stringify(cases.chartData)} className={styles.chart}>
                     <EditableChart
                         headerRow={<HeadersWithFilters chartData={caseChartData} users={cases?.users} filters={filters} setFilters={setFilters} onFiltersChange={changeFilters} />}
                         chartData={cases.chartData}
@@ -247,6 +254,7 @@ export default function AdminManageCases({ bcases, token }: Props) {
                             // setCases((c) => (c ? { ...c, chartData: updated } : c))
                             handleChartSave(updated)
                         }
+                        // onDelete={(cases) => handleChartDelete}
                     />
                 </div>
             )}

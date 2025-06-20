@@ -146,7 +146,8 @@
                     "id": "documents",
                     "title": "Supporting Documents",
                     "type": "file",
-                    "required": false
+                    "required": false,
+                    "maxFileSize": 25
                 },
                 {
                     "id": "reasonForRequest",

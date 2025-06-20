@@ -3,8 +3,9 @@ import React, { useEffect, useRef, useState } from "react";
 
 import styles from './EditableChart.module.css'
 import { Filters } from "@/types/dashboard";
+import Link from "next/link";
 
-type CellType = "userDropdown" | "dropdown" | "text" | "date";
+type CellType = "userDropdown" | "dropdown" | "text" | "date" | "file";
 
 interface ChartColumn {
     headerName: string;
@@ -21,6 +22,7 @@ interface EditableChartProps {
     chartConfig: CaseChartData;
     users?: string[];
     onChange: (updatedData: Case[]) => void; // called only on Save
+    onDelete?: (activeCases: Case[]) => void;
 }
 
 export default function EditableChart({
@@ -29,29 +31,26 @@ export default function EditableChart({
     chartConfig,
     users = [],
     onChange,
+    onDelete
 }: EditableChartProps) {
     const [data, setData] = useState<Case[]>(chartData);
     const [hasChanges, setHasChanges] = useState(false);
-    // keep a deep‐clone of the original values for comparison
-    const initialDataRef = useRef<Case[]>(
-        chartData.map(row => ({ ...row }))
-    );
+    const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+    const initialDataRef = useRef<Case[]>(chartData.map(row => ({ ...row })));
 
-    // whenever props.chartData changes (e.g. reload), reset both data and initial
     useEffect(() => {
         setData(chartData);
         initialDataRef.current = chartData.map(row => ({ ...row }));
         setHasChanges(false);
+        setSelectedIds(new Set());
     }, [chartData]);
 
-    // detect changes by comparing current data vs initialDataRef
     useEffect(() => {
         let changed = false;
         for (let i = 0; i < data.length; i++) {
             for (const key of Object.keys(chartConfig)) {
                 const a = data[i][key as keyof Case];
                 const b = initialDataRef.current[i]?.[key as keyof Case];
-                // normalize Dates to string
                 const av = a instanceof Date ? a.toISOString() : String(a ?? "");
                 const bv = b instanceof Date ? b.toISOString() : String(b ?? "");
                 if (av !== bv) {
@@ -78,20 +77,18 @@ export default function EditableChart({
         return av !== bv;
     }
 
-    function renderCell(row: Case, key: string, rowIndex: number) {
+    function renderCellContent(row: Case, key: string, rowIndex: number) {
         const col = chartConfig[key];
         if (!col) return null;
         if (!col.editable) return <>{String(row[key as keyof Case] ?? "")}</>;
 
         const raw = row[key as keyof Case];
         const val = raw instanceof Date ? raw.toISOString().slice(0, 10) : String(raw ?? "");
-        const style = isChanged(rowIndex, key) ? { backgroundColor: "#d4fcd4" } : {};
 
         switch (col.cellType) {
             case "userDropdown":
                 return (
                     <select
-                        style={style}
                         value={val}
                         onChange={(e) => handleChange(rowIndex, key, e.target.value)}
                     >
@@ -106,7 +103,6 @@ export default function EditableChart({
             case "dropdown":
                 return (
                     <select
-                        style={style}
                         value={val}
                         onChange={(e) => handleChange(rowIndex, key, e.target.value)}
                     >
@@ -122,7 +118,6 @@ export default function EditableChart({
             case "text":
                 return (
                     <input
-                        style={style}
                         type="text"
                         value={val}
                         onChange={(e) => handleChange(rowIndex, key, e.target.value)}
@@ -131,19 +126,33 @@ export default function EditableChart({
             case "date":
                 return (
                     <input
-                        style={style}
                         type="date"
                         value={val}
                         onChange={(e) => handleChange(rowIndex, key, e.target.value)}
                     />
                 );
+            case "file":
+                return val ? <Link className={styles.downloadBtn} href={val} target="_blank" rel="noopener noreferrer">Download</Link> : <p>None</p>;
         }
     }
 
+    function toggleSelect(id: number | undefined) {
+        if (id === undefined) return;
+        const newSelected = new Set(selectedIds);
+        if (newSelected.has(id)) newSelected.delete(id);
+        else newSelected.add(id);
+        setSelectedIds(newSelected);
+    }
+
+    function handleDelete() {
+        if (!onDelete) return;
+        const selectedArray = data.filter(row => selectedIds.has(row.id!));
+        onDelete(selectedArray);
+        setSelectedIds(new Set());
+    }
+
     function handleSave() {
-        // update parent
         onChange(data);
-        // reset initial to current
         initialDataRef.current = data.map(row => ({ ...row }));
         setHasChanges(false);
     }
@@ -153,13 +162,36 @@ export default function EditableChart({
             <button onClick={handleSave} disabled={!hasChanges}>
                 Save
             </button>
-            <table className={styles.table}>
-                {headerRow}
+            {onDelete && selectedIds.size > 0 && (
+                <button onClick={handleDelete} style={{ marginLeft: 8 }}>
+                    Delete ({selectedIds.size})
+                </button>
+            )}
+            <table className="table">
+                <thead>
+                    {onDelete ? (
+                        <th>Delete</th>
+                            // {headerRow}
+                    ) : (
+                    headerRow
+                    )}
+                </thead>
                 <tbody>
                     {data.map((row, ri) => (
                         <tr key={row.id ?? ri}>
+                            {onDelete && (
+                                <td>
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedIds.has(row.id!)}
+                                        onChange={() => toggleSelect(row.id)}
+                                    />
+                                </td>
+                            )}
                             {Object.keys(chartConfig).map((key) => (
-                                <td key={key}>{renderCell(row, key, ri)}</td>
+                                <td key={key} className={isChanged(ri, key) ? 'chart-changed' : ''}>
+                                    {renderCellContent(row, key, ri)}
+                                </td>
                             ))}
                         </tr>
                     ))}
