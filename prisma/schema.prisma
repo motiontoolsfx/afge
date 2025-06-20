@@ -11,7 +11,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMDFKWTc2V1kyTkoxUkpKNzBCNjU1WlZKM0siLCJ0ZW5hbnRfaWQiOiIwNGIxNDVmNzk4YTRlYTdkMTVhOGU2MDE2MWMxNTc3ZGMwOWI0NDUzNWRiNzdmYTkwMjY3MDBhN2IzNDkzZTI4IiwiaW50ZXJuYWxfc2VjcmV0IjoiZjE2MDAyODMtMTMwMi00ZDhjLWFjMDktOTIyYTkwY2NiMmI0In0.kcgJ5TZQXerpOtZ-l_NbPPH_hcNw2QmH7prY7EbbupA"
 }
 
 model User {
@@ -50,7 +50,7 @@ model Case {
   typesOfDisciplinaryAction DisciplinaryActionType?
   notes                     String?
   progress                  Progress?               @default(Not_Started)
-  documents                      String?
+  documents                 String?
   createdAt                 DateTime                @default(now())
   updatedAt                 DateTime                @updatedAt
 }
