@@ -87,6 +87,9 @@ Prisma.NullTypes = {
  * Enums
  */
 exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 });
 
@@ -125,6 +128,11 @@ exports.Prisma.CaseScalarFieldEnum = {
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
 };
 
 exports.Prisma.NullsOrder = {
@@ -243,18 +251,18 @@ const config = {
   "datasourceNames": [
     "db"
   ],
-  "activeProvider": "sqlite",
+  "activeProvider": "postgresql",
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "file:./dev.db"
+        "value": "prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMDFKWTc2V1kyTkoxUkpKNzBCNjU1WlZKM0siLCJ0ZW5hbnRfaWQiOiIwNGIxNDVmNzk4YTRlYTdkMTVhOGU2MDE2MWMxNTc3ZGMwOWI0NDUzNWRiNzdmYTkwMjY3MDBhN2IzNDkzZTI4IiwiaW50ZXJuYWxfc2VjcmV0IjoiZjE2MDAyODMtMTMwMi00ZDhjLWFjMDktOTIyYTkwY2NiMmI0In0.kcgJ5TZQXerpOtZ-l_NbPPH_hcNw2QmH7prY7EbbupA"
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../app/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id        String   @id @default(cuid())\n  fname     String\n  lname     String\n  username  String   @unique\n  password  String\n  role      Role\n  createdAt DateTime @default(now())\n\n  cases Case[]\n}\n\nenum Role {\n  owner\n  admin\n  steward\n}\n\nmodel Case {\n  id                        Int                     @id @default(autoincrement())\n  userId                    String?\n  user                      User?                   @relation(fields: [userId], references: [id])\n  fname                     String\n  lname                     String\n  phoneNumber               String\n  personalEmail             String\n  date                      String\n  position                  Position\n  payScale                  PayScale\n  entitlement               Entitlement\n  supervisor                String\n  reasonForRequest          ReasonForRequest\n  typesOfPayIssue           PayIssueType?\n  typesOfDisciplinaryAction DisciplinaryActionType?\n  notes                     String?\n  progress                  Progress?               @default(Not_Started)\n  documents                 String?\n  createdAt                 DateTime                @default(now())\n  updatedAt                 DateTime                @updatedAt\n}\n\nenum Position {\n  Nurse\n  MAS\n  FMS\n  EMS\n  HIMS\n  Doctor\n  Tech\n  LPN\n  Social_Work\n  Dentist\n  Dental_Assistant\n  Other\n}\n\nenum PayScale {\n  GS\n  WG\n  VN\n}\n\nenum Entitlement {\n  Title_38\n  Title_5\n  Hybrid\n  Unknown\n}\n\nenum ReasonForRequest {\n  Fact_Finding\n  Pay_Issues\n  Performance_Appraisal\n  EEO\n  Grievance\n  Change_in_Working_Condition\n  Reasonable_Accommodation_RA\n  Workers_Compensation\n  Disciplinary_Action\n  Other\n}\n\nenum PayIssueType {\n  Indebtedness\n  Pay_check\n}\n\nenum DisciplinaryActionType {\n  Verbal_Counseling\n  Written_Counseling\n  Admonishment\n  Reprimand\n  Proposed_Suspension\n  Proposed_Removal\n}\n\nenum Progress {\n  Not_Started\n  In_Progress\n  Meeting_Set\n  Awaiting_Response\n  Esculated\n  Complete\n}\n",
-  "inlineSchemaHash": "f874c0fce730345ea8ad3ce65562c9f5ddce6fd08523c2050ed09ff213fa3d53",
-  "copyEngine": true
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../app/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id        String   @id @default(cuid())\n  fname     String\n  lname     String\n  username  String   @unique\n  password  String\n  role      Role\n  createdAt DateTime @default(now())\n\n  cases Case[]\n}\n\nenum Role {\n  owner\n  admin\n  steward\n}\n\nmodel Case {\n  id                        Int                     @id @default(autoincrement())\n  userId                    String?\n  user                      User?                   @relation(fields: [userId], references: [id])\n  fname                     String\n  lname                     String\n  phoneNumber               String\n  personalEmail             String\n  date                      String\n  position                  Position\n  payScale                  PayScale\n  entitlement               Entitlement\n  supervisor                String\n  reasonForRequest          ReasonForRequest\n  typesOfPayIssue           PayIssueType?\n  typesOfDisciplinaryAction DisciplinaryActionType?\n  notes                     String?\n  progress                  Progress?               @default(Not_Started)\n  documents                 String?\n  createdAt                 DateTime                @default(now())\n  updatedAt                 DateTime                @updatedAt\n}\n\nenum Position {\n  Nurse\n  MAS\n  FMS\n  EMS\n  HIMS\n  Doctor\n  Tech\n  LPN\n  Social_Work\n  Dentist\n  Dental_Assistant\n  Other\n}\n\nenum PayScale {\n  GS\n  WG\n  VN\n}\n\nenum Entitlement {\n  Title_38\n  Title_5\n  Hybrid\n  Unknown\n}\n\nenum ReasonForRequest {\n  Fact_Finding\n  Pay_Issues\n  Performance_Appraisal\n  EEO\n  Grievance\n  Change_in_Working_Condition\n  Reasonable_Accommodation_RA\n  Workers_Compensation\n  Disciplinary_Action\n  Other\n}\n\nenum PayIssueType {\n  Indebtedness\n  Pay_check\n}\n\nenum DisciplinaryActionType {\n  Verbal_Counseling\n  Written_Counseling\n  Admonishment\n  Reprimand\n  Proposed_Suspension\n  Proposed_Removal\n}\n\nenum Progress {\n  Not_Started\n  In_Progress\n  Meeting_Set\n  Awaiting_Response\n  Esculated\n  Complete\n}\n",
+  "inlineSchemaHash": "10542940da183e19fa82b2898c654fb19b315a41401013fb3806c2c81a176094",
+  "copyEngine": false
 }
 
 const fs = require('fs')
@@ -291,9 +299,3 @@ const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
 
-// file annotations for bundling tools to include these files
-path.join(__dirname, "query_engine-windows.dll.node");
-path.join(process.cwd(), "app/generated/prisma/query_engine-windows.dll.node")
-// file annotations for bundling tools to include these files
-path.join(__dirname, "schema.prisma");
-path.join(process.cwd(), "app/generated/prisma/schema.prisma")
