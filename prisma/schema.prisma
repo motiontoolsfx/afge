@@ -98,7 +98,7 @@ enum ReasonForRequest {
 
 enum PayIssueType {
   Indebtedness
-  Pay_check
+  Pay_Check
 }
 
 enum DisciplinaryActionType {

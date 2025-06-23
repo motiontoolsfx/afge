@@ -215,7 +215,7 @@ exports.ReasonForRequest = exports.$Enums.ReasonForRequest = {
 
 exports.PayIssueType = exports.$Enums.PayIssueType = {
   Indebtedness: 'Indebtedness',
-  Pay_check: 'Pay_check'
+  Pay_Check: 'Pay_Check'
 };
 
 exports.DisciplinaryActionType = exports.$Enums.DisciplinaryActionType = {

@@ -1,16 +1,6 @@
 import prisma from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 import { NextResponse } from 'next/server'
-import {
-    Position,
-    PayScale,
-    Entitlement,
-    ReasonForRequest,
-    PayIssueType,
-    DisciplinaryActionType,
-    Progress,
-} from '@/app/generated/prisma'
-import { error } from 'console'
 
 interface UserToken {
     id: string
@@ -19,43 +9,36 @@ interface UserToken {
 
 async function getUser(req: Request): Promise<UserToken> {
     const auth = req.headers.get('authorization')?.split(' ')[1]
-    if (!auth) throw NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    if (!auth) {
+        throw NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
     return verifyToken(auth) as UserToken
 }
 
-// PATCH: create or update Cases
 export async function PATCH(req: Request) {
     try {
         const user = await getUser(req)
-        const updates: any[] = await req.json()
+        const { changes } = (await req.json()) as { changes: Array<Record<string, any>> }
 
         const results = await Promise.all(
-            updates.map(async (c) => {
-                const { id, userId, progress, notes, ...rest } = c
-
-                console.log(rest)
-
-                // Owner/Admin: full create/update
-                if (user.role === 'owner' || user.role === 'admin') {
-                    if (id) {
-                        return prisma.case.update({ where: { id }, data: { ...rest } })
-                    }
+            changes.map(async (c) => {
+                const { id, progress, notes, ...rest } = c
+                if (!id) {
+                    throw NextResponse.json({ error: 'Missing case ID' }, { status: 400 })
                 }
 
-                // Steward: only updating progress & notes on their own cases
+                if (user.role === 'owner' || user.role === 'admin') {
+                    return prisma.case.update({
+                        where: { id },
+                        data: { ...rest, progress, notes },
+                    })
+                }
+
                 if (user.role === 'steward') {
-                    if (!id) {
-                        throw NextResponse.json(
-                            { error: 'Stewards may not create cases' },
-                            { status: 403 }
-                        )
-                    }
-                    // fetch existing to check ownership
                     const existing = await prisma.case.findUnique({ where: { id } })
                     if (!existing || existing.userId !== user.id) {
                         throw NextResponse.json({ error: 'Forbidden' }, { status: 403 })
                     }
-                    // only update progress & notes
                     return prisma.case.update({
                         where: { id },
                         data: {
@@ -65,31 +48,38 @@ export async function PATCH(req: Request) {
                     })
                 }
 
-                // all others denied
                 throw NextResponse.json({ error: 'Forbidden' }, { status: 403 })
             })
         )
 
         return NextResponse.json(results, { status: 200 })
-    }
-    catch (e) {
-        console.log(error)
+    } catch (e: any) {
+        if (e instanceof NextResponse) return e
+        console.error(e)
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
     }
 }
 
-// DELETE: delete single Case by ID
 export async function DELETE(req: Request) {
-    const user = await getUser(req)
-    const { id }: { id?: number } = await req.json()
+    try {
+        const user = await getUser(req)
+        const { cases } = (await req.json()) as { cases: number[] }
 
-    if (user.role === 'owner' || user.role === 'admin') {
-        if (typeof id !== 'number') {
-            return NextResponse.json({ error: 'Missing or invalid Case ID' }, { status: 400 })
+        if (user.role !== 'owner' && user.role !== 'admin') {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
         }
-        await prisma.case.delete({ where: { id } })
-        return NextResponse.json({ success: true }, { status: 200 })
-    }
 
-    // Stewards and others cannot delete
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+        if (!Array.isArray(cases) || cases.some(id => typeof id !== 'number')) {
+            return NextResponse.json({ error: 'Missing or invalid Case IDs' }, { status: 400 })
+        }
+
+        await prisma.case.deleteMany({
+            where: { id: { in: cases } }
+        })
+
+        return NextResponse.json({ success: true }, { status: 200 })
+    } catch (e: any) {
+        console.error(e)
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    }
 }

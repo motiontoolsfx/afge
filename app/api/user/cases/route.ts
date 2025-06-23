@@ -8,19 +8,20 @@ export async function POST(req: Request) {
 
     const { page = 1, filters = {} } = await req.json()
     const pageNum = parseInt(page, 10) || 1
-    const limit = 10
+    const limit = 25
     const skip = (pageNum - 1) * limit
 
-    console.log(filters);
+    const defaultOrder = { orderBy: { createdAt: 'desc' } }
+    const finalFilters = Object.keys(filters).length === 0 ? defaultOrder : filters
 
     const [cases, total, users] = await Promise.all([
         prisma.case.findMany({
-            ...filters,
+            ...finalFilters,
             skip,
             take: limit,
         }),
         prisma.case.count({
-            where: filters.where,
+            where: finalFilters.where,
         }),
         prisma.user.findMany({
             select: { fname: true }

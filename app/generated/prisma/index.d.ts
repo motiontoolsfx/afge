@@ -92,7 +92,7 @@ export type ReasonForRequest = (typeof ReasonForRequest)[keyof typeof ReasonForR
 
 export const PayIssueType: {
   Indebtedness: 'Indebtedness',
-  Pay_check: 'Pay_check'
+  Pay_Check: 'Pay_Check'
 };
 
 export type PayIssueType = (typeof PayIssueType)[keyof typeof PayIssueType]

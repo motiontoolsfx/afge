@@ -6,16 +6,16 @@ import {
     ChevronDoubleRightIcon,
 } from "@heroicons/react/24/solid";
 
-import styles from './pagination.module.css'
+import styles from './styles/casesChart.module.css'
 
 type Props = {
     page: number;
     totalPages: number;
     totalCases: number;
-    onPageChange: (newPage: number) => void;
+    setPage: (newPage: number) => void;
 };
 
-export default function Pagination({ page, totalPages, totalCases, onPageChange }: Props) {
+export default function Pagination({ page, totalPages, totalCases, setPage }: Props) {
     const [inputValue, setInputValue] = useState(page.toString());
 
     useEffect(() => {
@@ -25,18 +25,18 @@ export default function Pagination({ page, totalPages, totalCases, onPageChange 
     function handleCommit() {
         const num = Number(inputValue);
         if (!isNaN(num) && num >= 1 && num <= totalPages) {
-            onPageChange(num);
+            setPage(num);
         } else {
             setInputValue(page.toString());
         }
     }
 
     return (
-        <div className={styles.container}>
-            <button className={"button-outline"} onClick={() => onPageChange(1)} disabled={page === 1}>
+        <div className={styles.paginationContainer}>
+            <button className={"button-outline"} onClick={() => setPage(1)} disabled={page === 1}>
                 <ChevronDoubleLeftIcon />
             </button>
-            <button className={"button-solid"} onClick={() => onPageChange(page - 1)} disabled={page === 1}>
+            <button className={"button-solid"} onClick={() => setPage(page - 1)} disabled={page === 1}>
                 <ChevronLeftIcon />
             </button>
             <span>
@@ -56,11 +56,10 @@ export default function Pagination({ page, totalPages, totalCases, onPageChange 
                 />{" "}
                 of {totalPages}
             </span>
-            {/* <span>{totalCases} Cases Found</span> */}
-            <button className={"button-solid"} onClick={() => onPageChange(page + 1)} disabled={page === totalPages}>
+            <button className={"button-solid"} onClick={() => setPage(page + 1)} disabled={page === totalPages}>
                 <ChevronRightIcon />
             </button>
-            <button className={"button-outline"} onClick={() => onPageChange(totalPages)} disabled={page === totalPages}>
+            <button className={"button-outline"} onClick={() => setPage(totalPages)} disabled={page === totalPages}>
                 <ChevronDoubleRightIcon />
             </button>
         </div>
