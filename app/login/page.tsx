@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { UserCircleIcon } from "@heroicons/react/24/solid";
 
 import styles from './login.module.css'
 
@@ -23,6 +24,7 @@ export default function LoginForm() {
 
     return (
         <form onSubmit={handleSubmit} className={styles.form}>
+            <UserCircleIcon className={styles.icon}/>
             <h2>User Login</h2>
             <input value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" />
             <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
