@@ -1,7 +1,12 @@
 .container {
     height: 100%;
     display: grid;
+    grid-template-rows: 2.5rem 1fr max-content;
     gap: 1rem;
+}
+
+.chartMsg {
+    text-align: center;
 }
 
 .chartContainer {
@@ -24,10 +29,6 @@
 
 .pageSelect {
     width: 2rem;
-}
-
-.editedCell {
-  background-color: var(--accent);
 }
 
 .headerChartCell {

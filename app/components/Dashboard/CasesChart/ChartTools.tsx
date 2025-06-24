@@ -1,13 +1,17 @@
 import { useState } from 'react'
 
+import { ArrowDownTrayIcon, DocumentCheckIcon, TrashIcon } from "@heroicons/react/24/solid";
+
 interface Props {
     onSave: () => Promise<void>
     onDelete: () => Promise<void>
+    onExport: () => void;
     selected: boolean;
-    updates: any
+    updates: any;
+    accountType: string;
 }
 
-export default function ChartTools({ onSave, onDelete, selected, updates }: Props) {
+export default function ChartTools({ onSave, onDelete, onExport, selected, updates, accountType }: Props) {
     const [loadingSave, setLoadingSave] = useState(false)
     const [loadingDelete, setLoadingDelete] = useState(false)
 
@@ -30,20 +34,28 @@ export default function ChartTools({ onSave, onDelete, selected, updates }: Prop
     }
 
     return (
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <div className='chart-tools'>
             <button
-                className={updates && Object.keys(updates).length === 0 ? 'button-solid' : 'button-solid button-loading'}
+                className={updates && Object.keys(updates).length === 0 ? 'button-solid button-icon' : 'button-solid button-loading button-icon'}
                 onClick={handleSave}
                 disabled={updates && Object.keys(updates).length === 0 || loadingSave}
             >
-                {loadingSave ? 'Saving...' : 'Save Changes'}
+                <span>{loadingSave ? 'Saving...' : 'Save Changes'}</span><DocumentCheckIcon />
             </button>
+            {accountType === 'admin' && (
+                <button
+                    className='button-outline button-loading button-icon'
+                    onClick={handleDelete}
+                    disabled={loadingDelete}
+                >
+                    <span>{loadingDelete ? 'Deleting...' : 'Delete'}</span><TrashIcon />
+                </button>
+            )}
             <button
-                className="button-outline button-loading"
-                onClick={handleDelete}
-                disabled={loadingDelete}
+                className='button-solid button-icon'
+                onClick={onExport}
             >
-                {loadingDelete ? 'Deleting...' : 'Delete'}
+                <span>Export Data</span><ArrowDownTrayIcon />
             </button>
         </div>
     )

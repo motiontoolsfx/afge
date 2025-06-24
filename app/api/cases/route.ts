@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 import { NextResponse } from 'next/server'
+import { getAuthUser } from '@/lib/getAuthUser'
 
 interface UserToken {
     id: string
@@ -17,7 +18,8 @@ async function getUser(req: Request): Promise<UserToken> {
 
 export async function PATCH(req: Request) {
     try {
-        const user = await getUser(req)
+        const user = await getAuthUser();
+        if (!user) throw NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         const { changes } = (await req.json()) as { changes: Array<Record<string, any>> }
 
         const results = await Promise.all(
@@ -27,10 +29,17 @@ export async function PATCH(req: Request) {
                     throw NextResponse.json({ error: 'Missing case ID' }, { status: 400 })
                 }
 
+                const cleanedData = Object.fromEntries(
+                    Object.entries({ ...rest, progress, notes }).map(([key, value]) => [
+                        key,
+                        value === '' ? null : value,
+                    ])
+                );
+
                 if (user.role === 'owner' || user.role === 'admin') {
                     return prisma.case.update({
                         where: { id },
-                        data: { ...rest, progress, notes },
+                        data: cleanedData,
                     })
                 }
 
@@ -62,7 +71,8 @@ export async function PATCH(req: Request) {
 
 export async function DELETE(req: Request) {
     try {
-        const user = await getUser(req)
+        const user = await getAuthUser();
+        if (!user) throw NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         const { cases } = (await req.json()) as { cases: number[] }
 
         if (user.role !== 'owner' && user.role !== 'admin') {

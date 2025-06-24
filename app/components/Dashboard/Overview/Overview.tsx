@@ -16,8 +16,8 @@ type RowData = {
 
 export function OverviewRow({ row }: { row: RowData }) {
     return (
-        <section>
-            <h3>{row.header}</h3>
+        <section className={styles.row}>
+            <h3 className={styles.sectionTitle}>{row.header}</h3>
             <ul className={styles.progressStats}>
                 {row.cards.map(({ label, value, Icon, backgroundColor }, i) => (
                     <li key={i} className={styles.card}>

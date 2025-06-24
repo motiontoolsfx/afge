@@ -1,10 +1,10 @@
-import { StewardCases as StewardCasesType } from "@/types/dashboard";
-import React from "react";
+// import { StewardCases as StewardCasesType } from "@/types/dashboard";
+import CasesChart from "../CasesChart/CasesChart";
 
-export default function StewardCases({ cases }: { cases: StewardCasesType | undefined }) {
-    return (
-        <div>
-            <pre>{JSON.stringify(cases, null, 2)}</pre>
-        </div>
-    );
+interface Props {
+    token: string;
+}
+
+export default function StewardCases({ token }: Props) {
+    return <CasesChart token={token} accountType={'steward'} />;
 }

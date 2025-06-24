@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import formJson from '../../../../../data/form.json'
 import { fetchCases } from '../lib/fetchCases'
+import { exportCsv } from '../lib/exportCsv'
 
 interface CaseItem { [key: string]: any }
 
@@ -16,19 +17,25 @@ type UpdateMap = {
     }
 }
 
-export function useCases(token: string) {
+interface Props {
+    token: string,
+    accountType: string
+}
+
+export function useCases({ token, accountType }: Props) {
     const [cases, setCases] = useState<CasesState>({ data: [], totalPages: 1 })
+    const [isLoadingCases, setIsLoadingCases] = useState(true);
     const [original, setOriginal] = useState<CaseItem[]>([])
     const [page, setPage] = useState<number>(1)
     const [updates, setUpdates] = useState<UpdateMap>({})
     const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set())
-    const [users, setUsers] = useState<any[]>([])
+    const [users, setUsers] = useState<{ id: string; fname: string; lname: string }[]>([]);
     const [filters, setFilters] = useState({})
 
     useEffect(() => {
-        console.log(filters)
+        setIsLoadingCases(true);
         if (!token) return
-        fetchCases(token, page, filters)
+        fetchCases(token, page, filters, accountType)
             .then(data => {
                 const d = data.data || []
                 setCases({ data: d, totalPages: data.totalPages || 1, totalCases: data.totalCases })
@@ -36,6 +43,7 @@ export function useCases(token: string) {
                 setOriginal(d)
                 setUpdates({})
                 setSelectedRows(new Set())
+                setIsLoadingCases(false);
             })
             .catch(console.error)
     }, [token, page, filters])
@@ -106,7 +114,7 @@ export function useCases(token: string) {
     }, [selectedRows, cases.data, token])
 
     const allQuestions = [
-        { id: 'user', title: 'Assigned Steward', type: 'user' },
+        ...(accountType === 'admin' ? [{ id: 'userId', title: 'Assigned Steward', type: 'user', required: false }] : []),
         {
             id: 'progress', title: 'Progress', type: 'dropdown', options: [
                 { id: 'Not_Started', option: 'Not Started' },
@@ -117,12 +125,31 @@ export function useCases(token: string) {
                 { id: 'Complete', option: 'Complete' }
             ], required: false
         },
-        { id: 'notes', title: 'Notes', type: 'short_answer' },
+        { id: 'notes', title: 'Notes', type: 'short_answer', required: false },
         ...formJson.sections.flatMap(section => section.questions)
     ]
 
+    const handleExport = useCallback(() => {
+        const transformedData = cases.data.map(item => {
+            const userId = item.userId
+            if (!userId) return item
+
+            const matchedUser = users.find(user => user.id === userId)
+            if (!matchedUser) return item
+
+            return {
+                ...item,
+                userId: `${matchedUser.fname} ${matchedUser.lname}`
+            }
+        })
+
+        exportCsv(transformedData, allQuestions)
+    }, [cases.data, allQuestions, users])
+
+
     return {
         cases,
+        isLoadingCases,
         page,
         setPage,
         updates,
@@ -134,6 +161,7 @@ export function useCases(token: string) {
         users,
         allQuestions,
         filters,
-        setFilters
+        setFilters,
+        handleExport
     }
 }

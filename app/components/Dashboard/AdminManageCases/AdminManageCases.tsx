@@ -1,6 +1,3 @@
-import { Case } from "@/app/generated/prisma";
-
-import styles from './adminManageCase.module.css'
 import CasesChart from "../CasesChart/CasesChart";
 
 type Props = {
@@ -9,5 +6,5 @@ type Props = {
 };
 
 export default function AdminManageCases({ token }: Props) {
-    return <CasesChart token={token} />;
+    return <CasesChart token={token} accountType={'admin'} />;
 }

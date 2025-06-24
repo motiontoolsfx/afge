@@ -38,7 +38,7 @@ export default function StewardOverview({ data }: { data: StewardOverviewType | 
 
     return (
         <div>
-            <h2>Admin Overview</h2>
+            <h2 className="section-title">Admin Overview</h2>
             <Overview rows={rows} />
         </div>
     );

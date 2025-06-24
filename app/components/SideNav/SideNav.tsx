@@ -30,17 +30,15 @@ const AdminOverviewTab: React.FC<TabComponentProps> = ({ data }) => (
 );
 const OwnerManageUserTab: React.FC<TabComponentProps> = ({ data, token }) => (
     <ManageUsers users={data.ownerUsers} token={token} />
-    // <div></div>
 );
 const AdminManageCasesTab: React.FC<TabComponentProps> = ({ data, token }) => (
     <AdminManageCases token={token} />
-    // <div></div>
 );
 const StewardOverviewTab: React.FC<TabComponentProps> = ({ data }) => (
     <StewardOverview data={data.stewardOverview} />
 );
-const StewardCasesTab: React.FC<TabComponentProps> = ({ data }) => (
-    <StewardCases cases={data.stewardCases} />
+const StewardCasesTab: React.FC<TabComponentProps> = ({ data, token }) => (
+    <StewardCases token={token} />
 );
 
 const tabComponents: { [key: string]: React.FC<TabComponentProps> } = {

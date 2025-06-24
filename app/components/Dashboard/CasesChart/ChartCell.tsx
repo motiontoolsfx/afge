@@ -5,12 +5,23 @@ import { ChangeEvent } from 'react'
 interface Props {
     question: any
     value: string | null
-    users: string[];
-    onChange: (newValue: string) => void
+    users: { id: string; fname: string; lname: string }[];
+    onChange: (newValue: string) => void;
+    accountType: string;
 }
 
-export default function ChartCell({ question, value, users, onChange }: Props) {
+export default function ChartCell({ question, value, users, onChange, accountType }: Props) {
     const safeValue = value ?? ''
+
+    if (accountType === 'steward') {
+        if (question.id === 'progress' || question.id === 'notes' || question.id === 'documents' || question.type == 'file') {
+            // show full editable/selectable input as below
+        } else {
+            return (<p>{safeValue}</p>)
+        }
+    } else if (accountType !== 'admin') {
+        return (<p>{safeValue}</p>)
+    }
 
     switch (question.type) {
         case 'short_answer':
@@ -27,7 +38,7 @@ export default function ChartCell({ question, value, users, onChange }: Props) {
                     value={safeValue}
                     onChange={(e: ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)}
                 >
-                    {!question.required && <option value={""}>-- Select an option --</option>}
+                    {!question.required && <option value={''}>Select</option>}
                     {question.options.map((opt: any) => (
                         <option key={opt.id} value={opt.id}>
                             {opt.option}
@@ -38,16 +49,22 @@ export default function ChartCell({ question, value, users, onChange }: Props) {
                 <div>Error</div>
             )
         case 'user':
-            return <select>
-                {users.map((user, index) => (
-                    <option key={index} value={user}>
-                        {user}
-                    </option>
-                ))}
-            </select>
+            return (
+                <select
+                    value={safeValue}
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)}
+                >
+                    {!question.required && <option value={''}>Not Assigned</option>}
+                    {users.map((user, index) => (
+                        <option key={index} value={user.id}>
+                            {user.fname} {user.lname}
+                        </option>
+                    ))}
+                </select>
+            );
         case 'file':
             return safeValue ? (
-                <Link href={safeValue} target='_blank' rel='noopener noreferrer'>
+                <Link className='downloadBtn' href={safeValue} target='_blank' rel='noopener noreferrer'>
                     Download File
                 </Link>
             ) : (

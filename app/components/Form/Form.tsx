@@ -4,12 +4,15 @@ import { useForm, Controller, useWatch } from "react-hook-form";
 import { useState } from "react";
 import { FormJson, Question } from "@/types/form";
 import styles from "./form.module.css";
+import { useRouter } from 'next/navigation'
 
 interface Props {
   formJson: FormJson;
 }
 
 export default function Form({ formJson }: Props) {
+  const router = useRouter()
+
   const defaultValues = formJson.sections.reduce((acc, section) => {
     section.questions.forEach((q) => {
       acc[q.id] = q.type === "file" ? null : "";
@@ -30,6 +33,7 @@ export default function Form({ formJson }: Props) {
 
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [sectionIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
   const currentSection = formJson.sections[sectionIndex];
 
   const getOptionIdSafe = (q: Question, label: string) => {
@@ -49,13 +53,14 @@ export default function Form({ formJson }: Props) {
   };
 
   const onSubmit = async (data: Record<string, any>) => {
+    setLoading(true);
+    setSubmitError(null);
+
     const formData = new FormData();
 
-    // compute visible questions including branching
     const visibleQuestions: Question[] = [];
     currentSection.questions.forEach((q) => {
       visibleQuestions.push(q);
-
       if (q.branching) {
         const selectedId = getOptionIdSafe(q, data[q.id] || "");
         const branchSectionId = q.branching[selectedId as string];
@@ -85,16 +90,18 @@ export default function Form({ formJson }: Props) {
         const err = await resp.json();
         setSubmitError(err.error || "An error occurred while submitting.");
       } else {
-        alert("Form submitted successfully!");
+        router.push('/submission')
       }
     } catch {
       setSubmitError("An error occurred while submitting.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const renderQuestion = (q: Question) => (
     <div key={q.id} className={styles.question}>
-      <label>{q.title}</label>
+      <label>{q.title} {q.required && '*'}</label>
       <Controller
         name={q.id}
         control={control}
@@ -220,8 +227,8 @@ export default function Form({ formJson }: Props) {
         )}
 
         <div style={{ marginTop: "1rem" }}>
-          <button className="button-solid" type="submit" disabled={!isValid}>
-            Submit
+          <button className="button-solid button-loading" type="submit" disabled={!isValid || loading}>
+            {loading ? "Submitting..." : "Submit"}
           </button>
         </div>
       </div>

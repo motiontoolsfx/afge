@@ -1,6 +1,8 @@
 'use client';
 import { Role } from "@/app/generated/prisma";
 import React, { useState, useEffect } from "react";
+import { ArrowDownTrayIcon, DocumentCheckIcon, TrashIcon, UserPlusIcon } from "@heroicons/react/24/solid";
+
 import styles from './manageUsers.module.css';
 
 type User = {
@@ -151,21 +153,21 @@ export default function ManageUsers({ users, token }: ManageUsersProps) {
     };
 
     return (
-        <div className={'chart-container'}>
-            <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
-                <button onClick={handleAddUser}>Add User</button>
-                <button disabled={!hasChanges} onClick={handleSaveChanges}>
-                    Save Changes
+        <div className={styles.chartContainer}>
+            <div className={'chart-tools'}>
+                <button className="button-outline button-icon" onClick={handleAddUser}><span>Add User</span><UserPlusIcon /></button>
+                <button className="button-solid button-icon" disabled={!hasChanges} onClick={handleSaveChanges}>
+                    <span>Save Changes</span><DocumentCheckIcon />
                 </button>
                 {selectedToDelete.length > 0 && (
-                    <button onClick={handleDeleteSelected}>Delete Selected</button>
+                    <button className="button-solid button-icon" onClick={handleDeleteSelected}><span>Delete Selected</span><TrashIcon /></button>
                 )}
             </div>
 
             <table className={'table'}>
                 <thead>
                     <tr>
-                        <th>Active</th>
+                        <th>Select</th>
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Username</th>

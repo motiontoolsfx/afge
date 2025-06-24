@@ -1,3 +1,11 @@
+.row {
+    margin-bottom: 2rem;
+}
+
+.sectionTitle {
+    margin-bottom: 1rem;
+}
+
 .progressStats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -45,6 +53,7 @@
 }
 
 .icon svg {
-    width: 2rem;
+    background: none;
+    width: 3rem;
     vertical-align: middle;
 }
