@@ -23,3 +23,7 @@
     width: 6rem;
     align-self: center;
 }
+
+.error {
+    text-align: center;
+}

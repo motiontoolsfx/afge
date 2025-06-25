@@ -115,10 +115,10 @@ export default function HeaderChartCell({ question, filters, setFilters }: Props
 
             {open && (
                 <div className={styles.dropdown}>
-                    <button onClick={() => setOrder("asc")} className={styles.dropdownBtn}>
+                    <button onClick={() => setOrder("asc")} className={`${styles.dropdownBtn} button-outline`}>
                         Sort A-Z
                     </button>
-                    <button onClick={() => setOrder("desc")} className={styles.dropdownBtn}>
+                    <button onClick={() => setOrder("desc")} className={`${styles.dropdownBtn} button-outline`}>
                         Sort Z-A
                     </button>
 
@@ -131,6 +131,7 @@ export default function HeaderChartCell({ question, filters, setFilters }: Props
                                 className={styles.searchInput}
                             />
                             <button
+                                className={`${styles.dropdownBtn} button-outline`}
                                 onClick={() => {
                                     const input = document.querySelector<HTMLInputElement>(
                                         `.${styles.searchInput}`
@@ -148,7 +149,7 @@ export default function HeaderChartCell({ question, filters, setFilters }: Props
                                     <span key={i} className={styles.keyBadge}>
                                         {k}
                                         <button
-                                            className={styles.removeKeyBtn}
+                                            className={`${styles.dropdownBtn} button-outline`}
                                             onClick={() =>
                                                 setFilters(f => {
                                                     const updatedIn = (f.where?.[id]?.in ?? []).filter(val => val !== k);

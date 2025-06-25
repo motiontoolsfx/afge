@@ -16,6 +16,10 @@
     gap: 1rem;
 }
 
+.formHeading p {
+    color: var(--background-light);
+}
+
 .sectionHeading {
     margin-bottom: 2rem;
     font-weight: normal;
@@ -42,8 +46,6 @@
     width: 100%;
 }
 
-.requiredText {
-    font-size: 0.8rem;
-    margin-top: 0.5rem;
-    color: var(--color-error);
+.filePicker {
+    margin-bottom: 0.5rem;
 }

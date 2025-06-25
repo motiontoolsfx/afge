@@ -117,6 +117,7 @@ export default function Form({ formJson }: Props) {
             return (
               <>
                 <input
+                  className={styles.filePicker}
                   type="file"
                   onChange={(e) => {
                     const file = e.target.files?.[0] || null;
@@ -139,7 +140,7 @@ export default function Form({ formJson }: Props) {
                   </small>
                 )}
                 {errors[q.id] && (
-                  <p className={styles.requiredText}>
+                  <p className={'requiredText'}>
                     {(errors[q.id] as any)?.message ?? `${q.title} is required.`}
                   </p>
                 )}
@@ -165,7 +166,7 @@ export default function Form({ formJson }: Props) {
                   )}
                 </select>
                 {errors[q.id] && (
-                  <p className={styles.requiredText}>{q.title} is required.</p>
+                  <p className={'requiredText'}>{q.title} is required.</p>
                 )}
               </>
             );
@@ -175,7 +176,7 @@ export default function Form({ formJson }: Props) {
             <>
               <input type="text" {...field} value={field.value ?? ""} />
               {errors[q.id] && (
-                <p className={styles.requiredText}>{q.title} is required.</p>
+                <p className={'requiredText'}>{q.title} is required.</p>
               )}
             </>
           );
@@ -221,7 +222,7 @@ export default function Form({ formJson }: Props) {
           .map(renderQuestionWithBranching)}
 
         {submitError && (
-          <div className={styles.requiredText}>
+          <div className={'requiredText'}>
             <strong>Error:</strong> {submitError}
           </div>
         )}

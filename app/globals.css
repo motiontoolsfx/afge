@@ -90,9 +90,14 @@ select {}
   padding-right: 1rem;
 }
 
+input::file-selector-button {
+  margin-right: 1rem;
+}
+
 /* Base Styles */
 .button-solid,
-.button-outline {
+.button-outline,
+input::file-selector-button {
   font-size: 1rem;
   font-weight: 600;
   padding: 0.6rem 1.2rem;
@@ -104,7 +109,7 @@ select {}
 /* Solid Button */
 .button-solid {
   background-color: #002D74;
-  color: white;
+  color: var(--background-light);
   border: none;
 }
 
@@ -117,12 +122,14 @@ select {}
   cursor: not-allowed;
 }
 
+input::file-selector-button,
 .button-outline {
   background-color: transparent;
   color: #002D74;
   border: 2px solid #002D74;
 }
 
+input::file-selector-button:hover,
 .button-outline:hover {
   background-color: #E6ECF7;
 }
@@ -248,4 +255,10 @@ input[type="checkbox"]:checked::after {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: var(--background);
+}
+
+.requiredText {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    color: var(--color-error);
 }
