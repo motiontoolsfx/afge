@@ -5,6 +5,10 @@
     height: max-content;
 }
 
+.table th {
+    color: var(--background);
+}
+
 .table th,
 .table td {
     border: 1px solid lightgray;
