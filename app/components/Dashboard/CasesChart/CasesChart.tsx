@@ -41,6 +41,8 @@ export default function CasesChart({ token, accountType }: Props) {
                 onDelete={handleDelete}
                 onExport={handleExport}
                 accountType={accountType}
+                selectedRows={selectedRows}
+                cases={cases}
             />
 
             {isLoadingCases ? (

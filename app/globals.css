@@ -104,6 +104,7 @@ input::file-selector-button {
   border-radius: 0.5rem;
   transition: all 0.2s ease;
   cursor: pointer;
+  height: 2.5rem;
 }
 
 /* Solid Button */
@@ -138,6 +139,12 @@ input::file-selector-button:hover,
   color: #7A94C3;
   border-color: #7A94C3;
   cursor: not-allowed;
+}
+
+.button-delete {
+  background: var(--color-error);
+  color: var(--foreground);
+  border-color: var(--color-error);
 }
 
 /* .button-loading {
@@ -258,7 +265,7 @@ input[type="checkbox"]:checked::after {
 }
 
 .requiredText {
-    font-size: 0.8rem;
-    margin-top: 0.5rem;
-    color: var(--color-error);
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  color: var(--color-error);
 }

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { ArrowDownTrayIcon, DocumentCheckIcon, TrashIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 
 import styles from './manageUsers.module.css';
+import LoadingDots from "../../LoadingDots/LoadingDots";
 
 type User = {
     id: string;
@@ -37,6 +38,8 @@ export default function ManageUsers({ users, token }: ManageUsersProps) {
         users?.users?.map((u) => deepClone({ ...u, active: false })) ?? []
     );
     const [hasChanges, setHasChanges] = useState(false);
+    const [saving, setSaving] = useState(false);
+    const [deleting, setDeleting] = useState(false);
 
     useEffect(() => {
         setHasChanges(
@@ -84,6 +87,7 @@ export default function ManageUsers({ users, token }: ManageUsersProps) {
     };
 
     const handleSaveChanges = async () => {
+        setSaving(true);
         const changedRows = rows
             .map(({ active, ...rest }) => rest)
             .filter((row, index) => {
@@ -128,6 +132,8 @@ export default function ManageUsers({ users, token }: ManageUsersProps) {
             }
         } catch (error) {
             console.error(error);
+        } finally {
+            setSaving(false);
         }
     };
 
@@ -136,6 +142,7 @@ export default function ManageUsers({ users, token }: ManageUsersProps) {
         .map((r) => r.id);
 
     const handleDeleteSelected = async () => {
+        setDeleting(true);
         for (const id of selectedToDelete) {
             await fetch("/api/auth/users", {
                 method: "DELETE",
@@ -150,17 +157,20 @@ export default function ManageUsers({ users, token }: ManageUsersProps) {
         setOriginalRows((prev) =>
             prev.filter((r) => !selectedToDelete.includes(r.id))
         );
+        setDeleting(false);
     };
 
     return (
         <div className={styles.chartContainer}>
             <div className={'chart-tools'}>
                 <button className="button-outline button-icon" onClick={handleAddUser}><span>Add User</span><UserPlusIcon /></button>
-                <button className="button-solid button-icon" disabled={!hasChanges} onClick={handleSaveChanges}>
-                    <span>Save Changes</span><DocumentCheckIcon />
+                <button className="button-solid button-icon" disabled={!hasChanges || saving} onClick={handleSaveChanges}>
+                    <span>{saving ? <LoadingDots /> : 'Save Changes'}</span><DocumentCheckIcon />
                 </button>
                 {selectedToDelete.length > 0 && (
-                    <button className="button-solid button-icon" onClick={handleDeleteSelected}><span>Delete Selected</span><TrashIcon /></button>
+                    <button className="button-solid button-icon button-delete" disabled={deleting} onClick={handleDeleteSelected}>
+                        <span>{deleting ? <LoadingDots /> : 'Delete Selected'}</span><TrashIcon />
+                    </button>
                 )}
             </div>
 
