@@ -36,6 +36,11 @@ body {
   margin: 0;
 }
 
+::selection {
+  background: var(--accent);
+  color: var(--background);
+}
+
 input,
 select {
   all: unset;

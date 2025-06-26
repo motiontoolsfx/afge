@@ -5,6 +5,7 @@ import { useState } from "react";
 import { FormJson, Question } from "@/types/form";
 import styles from "./form.module.css";
 import { useRouter } from 'next/navigation'
+import LoadingDots from "../LoadingDots/LoadingDots";
 
 interface Props {
   formJson: FormJson;
@@ -229,7 +230,7 @@ export default function Form({ formJson }: Props) {
 
         <div style={{ marginTop: "1rem" }}>
           <button className="button-solid button-loading" type="submit" disabled={!isValid || loading}>
-            {loading ? "Submitting..." : "Submit"}
+            {loading ? <LoadingDots /> : "Submit"}
           </button>
         </div>
       </div>
