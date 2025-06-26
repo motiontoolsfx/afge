@@ -34,8 +34,8 @@
 .headerChartCell {
     display: flex;
     justify-content: center;
-    width: 100%;
-    height: 100%;
+    width: max-content;
+    cursor: pointer;
 }
 
 .filterBtn {
@@ -54,6 +54,7 @@
 }
 
 .dropdown {
+    width: max-content;
     bottom: 0;
     left: 0;
     transform: translateY(calc(100% + 1rem));
