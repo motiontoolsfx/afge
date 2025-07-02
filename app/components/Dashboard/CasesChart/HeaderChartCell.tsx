@@ -97,10 +97,12 @@ export default function HeaderChartCell({ question, filters, setFilters }: Props
         });
     };
 
-    const onSearchKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-            addSearch((e.target as HTMLInputElement).value);
-            (e.target as HTMLInputElement).value = "";
+    const onSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const input = e.currentTarget.querySelector('input');
+        if (input && input.value.trim()) {
+            addSearch(input.value);
+            input.value = '';
         }
     };
 
@@ -123,24 +125,15 @@ export default function HeaderChartCell({ question, filters, setFilters }: Props
                     </button>
 
                     {question.type === "short_answer" && (
-                        <div className={styles.searchSection}>
+                        <form className={styles.searchSection} onSubmit={onSubmit}>
                             <input
                                 type="text"
                                 placeholder="Enter keyword…"
-                                onKeyDown={onSearchKey}
                                 className={styles.searchInput}
                             />
                             <button
+                                type="submit"
                                 className={`${styles.dropdownBtn} button-outline`}
-                                onClick={() => {
-                                    const input = document.querySelector<HTMLInputElement>(
-                                        `.${styles.searchInput}`
-                                    );
-                                    if (input) {
-                                        addSearch(input.value);
-                                        input.value = "";
-                                    }
-                                }}
                             >
                                 Enter
                             </button>
@@ -149,6 +142,7 @@ export default function HeaderChartCell({ question, filters, setFilters }: Props
                                     <span key={i} className={styles.keyBadge}>
                                         {k}
                                         <button
+                                            type="button"
                                             className={`${styles.dropdownBtn} button-outline`}
                                             onClick={() =>
                                                 setFilters(f => {
@@ -165,7 +159,7 @@ export default function HeaderChartCell({ question, filters, setFilters }: Props
                                     </span>
                                 ))}
                             </div>
-                        </div>
+                        </form>
                     )}
 
                     {question.type === "dropdown" && question.options && (

@@ -22,7 +22,7 @@
 
 .table td input[type="text"],
 .table td select,
-.table td div,
+.table td>div,
 .table td p {
     all: unset;
     padding: 0.5rem 0.75rem;

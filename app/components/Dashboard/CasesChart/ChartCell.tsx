@@ -1,6 +1,9 @@
 // ChartCell.tsx
 import Link from 'next/link'
 import { ChangeEvent } from 'react'
+import ChartNotes from './ChartNotes';
+
+import styles from './styles/casesChart.module.css'
 
 interface Props {
     question: any
@@ -23,11 +26,23 @@ export default function ChartCell({ question, value, users, onChange, accountTyp
         return (<p>{safeValue}</p>)
     }
 
+    if (question.id === 'notes') {
+        return (
+            <ChartNotes value={safeValue} onChange={onChange}>
+                <input
+                    type="text"
+                    value={safeValue}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
+                />
+            </ChartNotes>
+        )
+    }
+
     switch (question.type) {
         case 'short_answer':
             return (
                 <input
-                    type='text'
+                    type="text"
                     value={safeValue}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
                 />

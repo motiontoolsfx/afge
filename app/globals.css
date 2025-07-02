@@ -42,7 +42,8 @@ body {
 }
 
 input,
-select {
+select,
+textarea {
   all: unset;
   border: 1px solid lightgray;
   /* background: var(--background-light); */
@@ -54,7 +55,8 @@ select {
 input:hover,
 input:focus,
 select:hover,
-select:focus {
+select:focus,
+textarea:focus {
   border-color: var(--accent);
 }
 
