@@ -1,0 +1,24 @@
+.msgBox {
+    position: absolute;
+    z-index: 999;
+    bottom: 4rem;
+    right: 4rem;
+    width: 400px;
+    height: 6rem;
+    background: var(--foreground);
+    border-radius: var(--corner-radius);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.16);
+    overflow: hidden;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.line {
+    width: 10px;
+    height: 100%;
+}
+
+.icon {
+    width: 2rem;
+}
